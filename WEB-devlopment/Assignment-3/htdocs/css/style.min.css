@@ -1,0 +1,287 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --bg-dark: #0f172a;
+    --bg-card: #1e293b;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --primary: #10b981;
+    --secondary: #3b82f6;
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8
+}
+
+[data-theme="light"] {
+    --bg-dark: #f1f5f9;
+    --bg-card: #ffffff;
+    --glass-bg: rgba(0, 0, 0, 0.02);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --text-main: #0f172a;
+    --text-muted: #64748b
+}
+
+* {
+    transition: background-color .3s ease, color .3s ease, border-color .3s ease
+}
+
+body {
+    background-color: var(--bg-dark);
+    font-family: 'Inter', sans-serif;
+    color: var(--text-main);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    background-image: radial-gradient(circle at 15% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 25%), radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 25%)
+}
+
+.navbar {
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 1rem 0
+}
+
+[data-theme="light"] .navbar {
+    background: rgba(255, 255, 255, 0.9)
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -.5px
+}
+
+.auth-container {
+    max-width: 420px;
+    margin: 80px auto;
+    padding: 2.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden
+}
+
+.auth-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary))
+}
+
+.form-label {
+    color: var(--text-muted);
+    font-size: .9rem;
+    margin-bottom: .5rem;
+    margin-left: 4px
+}
+
+.form-control {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+    padding: .8rem 1rem;
+    border-radius: 12px
+}
+
+[data-theme="light"] .form-control {
+    background: rgba(0, 0, 0, 0.05)
+}
+
+.form-control:focus {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+    color: var(--text-main)
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border: none;
+    padding: .8rem;
+    border-radius: 12px;
+    font-weight: 600
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -10px rgba(16, 185, 129, 0.5)
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #22c55e, #10b981);
+    border: none
+}
+
+.dashboard-header {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem
+}
+
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    transition: transform .2s ease, box-shadow .2s ease
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3)
+}
+
+.priority {
+    display: inline-block;
+    padding: .25rem .75rem;
+    border-radius: 20px;
+    font-size: .75rem;
+    font-weight: 600;
+    margin-right: .5rem
+}
+
+.priority-high {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444
+}
+
+.priority-medium {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b
+}
+
+.priority-low {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e
+}
+
+.status-completed {
+    opacity: .6;
+    text-decoration: line-through
+}
+
+.status-badge {
+    padding: .25rem .5rem;
+    border-radius: 6px;
+    font-size: .7rem;
+    font-weight: 600
+}
+
+.status-pending {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b
+}
+
+.status-completed-badge {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e
+}
+
+.loader {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--primary);
+    animation: spin 1s ease-in-out infinite;
+    margin: 1rem auto;
+    display: none
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+.theme-toggle {
+    cursor: pointer;
+    padding: .5rem;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border)
+}
+
+.search-box {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: .75rem 1rem;
+    color: var(--text-main);
+    width: 300px
+}
+
+.activity-item {
+    padding: .75rem;
+    border-left: 3px solid var(--primary);
+    margin-bottom: .5rem;
+    background: var(--glass-bg);
+    border-radius: 0 8px 8px 0
+}
+
+.stats-card {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 16px;
+    padding: 1.5rem;
+    color: white
+}
+
+.due-date {
+    font-size: .75rem;
+    color: var(--warning)
+}
+
+.due-date.overdue {
+    color: var(--danger)
+}
+
+.checkbox-custom {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--glass-border);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .3s ease
+}
+
+.checkbox-custom:hover {
+    border-color: var(--primary);
+    background: rgba(16, 185, 129, 0.1)
+}
+
+.checkbox-custom.checked {
+    background: var(--primary);
+    border-color: var(--primary)
+}
+
+.fade-in {
+    animation: fadeIn .5s ease
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px)
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0)
+    }
+}

@@ -1,0 +1,50 @@
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ../htdocs:/var/www/html
+    env_file:
+      - ../.env
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    depends_on:
+      - rabbitmq
+    restart: always
+
+  # RabbitMQ Message Broker
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER:-admin}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS:-admin123}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    restart: always
+
+  # Worker to process queued tasks
+  worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.worker
+    volumes:
+      - ../htdocs:/var/www/html
+    env_file:
+      - ../.env
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    depends_on:
+      - rabbitmq
+    restart: always
+
+volumes:
+  rabbitmq_data:
