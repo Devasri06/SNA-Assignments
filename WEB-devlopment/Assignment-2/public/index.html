@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Book Library Management System - A Premium User Experience for managing book records effectively.">
+    <title>BookVault - Library Management</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-book-open"></i> BookVault</h1>
+            <button class="btn-primary" onclick="openModal()">
+                <i class="fas fa-plus"></i> Add Book
+            </button>
+        </header>
+
+        <main id="book-grid" class="grid">
+            <!-- Cards will be injected here -->
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="bookModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Book</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="bookForm">
+                <input type="hidden" id="bookId">
+                <div class="form-group">
+                    <label for="title">Book Title</label>
+                    <input type="text" id="title" required placeholder="e.g. The Great Gatsby">
+                </div>
+                <div class="form-group">
+                    <label for="author">Author Name</label>
+                    <input type="text" id="author" required placeholder="e.g. F. Scott Fitzgerald">
+                </div>
+                <div class="form-group">
+                    <label for="genre">Genre</label>
+                    <input type="text" id="genre" required placeholder="e.g. Classic Fiction">
+                </div>
+                <div class="form-group">
+                    <label for="year">Publication Year</label>
+                    <input type="number" id="year" required placeholder="e.g. 1925">
+                </div>
+                <button type="submit" class="btn-submit">Save Book</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
