@@ -46,7 +46,8 @@ class AuthController {
                 "id" => $this->user->id,
                 "username" => $this->user->username,
                 "email" => $this->user->email,
-                "full_name" => $this->user->full_name
+                "full_name" => $this->user->full_name,
+                "phone" => $this->user->phone
             ];
             $this->response(true, 201, "User registered successfully.", $payload);
         } else {

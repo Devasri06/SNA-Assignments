@@ -37,6 +37,7 @@ class UserController {
         $this->checkAuth();
         $this->user->id = $id;
         if ($this->user->readOne()) {
+            $user_arr = [
                 "id" => $this->user->id,
                 "username" => $this->user->username,
                 "email" => $this->user->email,
@@ -112,6 +113,8 @@ class UserController {
             $this->user->username = null;
             $this->user->email = null;
             $this->user->password = null;
+            $this->user->full_name = null;
+            $this->user->phone = null;
         }
 
         if (isset($data['username'])) $this->user->username = $data['username'];
