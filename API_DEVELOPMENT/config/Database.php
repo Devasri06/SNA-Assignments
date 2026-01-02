@@ -14,9 +14,13 @@ class Database {
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         } catch(PDOException $exception) {
-            // In a real API, you might want to log this and return a 500 JSON error
-            // For now, we will handle it in the controller or just let it bubble if needed
-            // echo "Connection error: " . $exception->getMessage();
+            http_response_code(500);
+            echo json_encode([
+                "success" => false,
+                "message" => "Database connection failed: " . $exception->getMessage(), // Including message for debug, can be removed in prod
+                "error" => 500
+            ]);
+            exit();
         }
         return $this->conn;
     }

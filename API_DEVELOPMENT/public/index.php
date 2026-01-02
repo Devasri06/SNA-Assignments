@@ -60,39 +60,71 @@ if ($resource === 'auth') {
 } elseif ($resource === 'api') {
     $entity = isset($uri[1]) ? $uri[1] : null;
     
-    if ($entity === 'users') {
-        $controller = new UserController($db);
-        $id = isset($uri[2]) ? $uri[2] : null;
+    // Expected URLs:
+    // /api/fetch-all-accounts
+    // /api/retrieve-account/{id}
+    // /api/register-account
+    // /api/modify-account/{id}
+    // /api/remove-account/{id}
+    
+    $controller = new UserController($db);
+    $id = isset($uri[2]) ? $uri[2] : null;
 
-        if ($requestMethod == 'GET') {
-            if ($id) {
-                $controller->getOne($id);
-            } else {
+    switch ($entity) {
+        case 'fetch-all-accounts':
+            if ($requestMethod == 'GET') {
                 $controller->getAll();
-            }
-        } elseif ($requestMethod == 'POST') {
-            $controller->create($data);
-        } elseif ($requestMethod == 'PUT') {
-            if ($id) {
-                $controller->update($id, $data);
             } else {
-                 header("HTTP/1.1 400 Bad Request");
-                 echo json_encode(["success" => false, "message" => "ID is required for update"]);
+                methodNotAllowed();
             }
-        } elseif ($requestMethod == 'DELETE') {
-            if ($id) {
-                $controller->delete($id);
+            break;
+            
+        case 'retrieve-account':
+            if ($requestMethod == 'GET' && $id) {
+                $controller->getOne($id);
+            } elseif (!$id) {
+                badRequest("ID is required");
             } else {
-                 header("HTTP/1.1 400 Bad Request");
-                 echo json_encode(["success" => false, "message" => "ID is required for delete"]);
+                methodNotAllowed();
             }
-        } else {
-            header("HTTP/1.1 405 Method Not Allowed");
-            echo json_encode(["success" => false, "message" => "Method not allowed"]);
-        }
-    } else {
-        header("HTTP/1.1 404 Not Found");
-        echo json_encode(["success" => false, "message" => "Entity not found"]);
+            break;
+            
+        case 'register-account':
+            if ($requestMethod == 'POST') {
+                 $controller->create($data);
+            } else {
+                methodNotAllowed();
+            }
+            break;
+            
+        case 'modify-account':
+            if ($requestMethod == 'PUT') {
+                if ($id) {
+                    $controller->update($id, $data);
+                } else {
+                    badRequest("ID is required for update");
+                }
+            } else {
+                methodNotAllowed();
+            }
+            break;
+            
+        case 'remove-account':
+            if ($requestMethod == 'DELETE') {
+                 if ($id) {
+                    $controller->delete($id);
+                } else {
+                     badRequest("ID is required for delete");
+                }
+            } else {
+                methodNotAllowed();
+            }
+            break;
+
+        default:
+             header("HTTP/1.1 404 Not Found");
+             echo json_encode(["success" => false, "message" => "Endpoint not found"]);
+             break;
     }
 } else {
     // Welcome or 404
@@ -102,5 +134,17 @@ if ($resource === 'auth') {
         header("HTTP/1.1 404 Not Found");
         echo json_encode(["success" => false, "message" => "Endpoint not found"]);
     }
+}
+
+// Helper methods for cleaner index.php (embedded here since we are editing the file directly)
+// Ideally these would be in a base controller or helper class, but for single file edit:
+function methodNotAllowed() {
+    header("HTTP/1.1 405 Method Not Allowed");
+    echo json_encode(["success" => false, "message" => "Method not allowed"]);
+}
+
+function badRequest($msg) {
+    header("HTTP/1.1 400 Bad Request");
+    echo json_encode(["success" => false, "message" => $msg]);
 }
 ?>

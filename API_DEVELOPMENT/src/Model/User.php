@@ -7,6 +7,10 @@ class User {
     public $username;
     public $email;
     public $password;
+    public $full_name;
+    public $phone;
+    public $role;
+    public $is_active;
     public $created_at;
     public $updated_at;
 
@@ -17,7 +21,7 @@ class User {
     // Create new user
     public function create() {
         $query = "INSERT INTO " . $this->table_name . " 
-                  SET username=:username, email=:email, password=:password";
+                  SET username=:username, email=:email, password=:password, full_name=:full_name, phone=:phone";
         
         $stmt = $this->conn->prepare($query);
 
@@ -29,6 +33,13 @@ class User {
         $stmt->bindParam(":username", $this->username);
         $stmt->bindParam(":email", $this->email);
         $stmt->bindParam(":password", $this->password);
+        
+        // Optional fields
+        $this->full_name = !empty($this->full_name) ? htmlspecialchars(strip_tags($this->full_name)) : null;
+        $this->phone = !empty($this->phone) ? htmlspecialchars(strip_tags($this->phone)) : null;
+        
+        $stmt->bindParam(":full_name", $this->full_name);
+        $stmt->bindParam(":phone", $this->phone);
 
         if ($stmt->execute()) {
             $this->id = $this->conn->lastInsertId();
@@ -57,7 +68,7 @@ class User {
 
     // Get all users
     public function read() {
-        $query = "SELECT id, username, email, created_at, updated_at FROM " . $this->table_name . " ORDER BY created_at DESC";
+        $query = "SELECT id, username, email, full_name, phone, role, is_active, created_at, updated_at FROM " . $this->table_name . " ORDER BY created_at DESC";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
@@ -65,7 +76,7 @@ class User {
 
     // Get single user
     public function readOne() {
-        $query = "SELECT id, username, email, created_at, updated_at FROM " . $this->table_name . " WHERE id = ? LIMIT 0,1";
+        $query = "SELECT id, username, email, full_name, phone, role, is_active, created_at, updated_at FROM " . $this->table_name . " WHERE id = ? LIMIT 0,1";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->id);
         $stmt->execute();
@@ -74,6 +85,10 @@ class User {
         if ($row) {
             $this->username = $row['username'];
             $this->email = $row['email'];
+            $this->full_name = $row['full_name'];
+            $this->phone = $row['phone'];
+            $this->role = $row['role'];
+            $this->is_active = $row['is_active'];
             $this->created_at = $row['created_at'];
             $this->updated_at = $row['updated_at'];
             return true;
@@ -98,6 +113,12 @@ class User {
         if (!empty($this->password)) {
             $setParts[] = "password = :password";
         }
+        if (!empty($this->full_name)) {
+            $setParts[] = "full_name = :full_name";
+        }
+        if (!empty($this->phone)) {
+            $setParts[] = "phone = :phone";
+        }
         
         if (empty($setParts)) {
             return false;
@@ -118,6 +139,14 @@ class User {
         if (!empty($this->password)) {
             $this->password = htmlspecialchars(strip_tags($this->password));
             $stmt->bindParam(':password', $this->password);
+        }
+        if (!empty($this->full_name)) {
+            $this->full_name = htmlspecialchars(strip_tags($this->full_name));
+            $stmt->bindParam(':full_name', $this->full_name);
+        }
+        if (!empty($this->phone)) {
+            $this->phone = htmlspecialchars(strip_tags($this->phone));
+            $stmt->bindParam(':phone', $this->phone);
         }
         
         $stmt->bindParam(':id', $this->id);

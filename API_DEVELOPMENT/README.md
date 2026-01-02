@@ -32,7 +32,7 @@ private $password = "";
 ```
 
 ### 3. Run the API
-Serve the application using the PHP built-in server. Run this command from the project root (`User_Management_API` folder):
+Serve the application using the PHP built-in server. Run this command from the project root (`API_DEVELOPMENT` folder):
 
 ```bash
 php -S localhost:8000 -t public
@@ -51,7 +51,9 @@ The API will be available at `http://localhost:8000`.
   {
       "username": "johndoe",
       "email": "john@example.com",
-      "password": "secretpassword"
+      "password": "secretpassword",
+      "full_name": "John Doe",
+      "phone": "1234567890"
   }
   ```
 - **Response**: `201 Created`
@@ -81,35 +83,36 @@ The API will be available at `http://localhost:8000`.
 
 ### User Management (Protected)
 
-#### 1. Get All Users
-- **Endpoint**: `GET /api/users`
+#### 1. Fetch All Accounts
+- **Endpoint**: `GET /api/fetch-all-accounts`
 - **Headers**: `Authorization: Bearer <token>`
 - **Response**: `200 OK` (List of users)
 
-#### 2. Get Single User
-- **Endpoint**: `GET /api/users/{id}`
+#### 2. Retrieve Account
+- **Endpoint**: `GET /api/retrieve-account/{id}`
 - **Headers**: `Authorization: Bearer <token>`
 - **Response**: `200 OK`
 
-#### 3. Create User (Admin/Manual)
-- **Endpoint**: `POST /api/users`
+#### 3. Register Account (Admin/Manual)
+- **Endpoint**: `POST /api/register-account`
 - **Headers**: `Authorization: Bearer <token>`
 - **Body**: Same as Signup
 - **Response**: `201 Created`
 
-#### 4. Update User
-- **Endpoint**: `PUT /api/users/{id}`
+#### 4. Modify Account
+- **Endpoint**: `PUT /api/modify-account/{id}`
 - **Headers**: `Authorization: Bearer <token>`
 - **Body** (Partial updates allowed):
   ```json
   {
-      "username": "john_updated"
+      "username": "john_updated",
+      "full_name": "Johnathan Doe"
   }
   ```
 - **Response**: `200 OK`
 
-#### 5. Delete User
-- **Endpoint**: `DELETE /api/users/{id}`
+#### 5. Remove Account
+- **Endpoint**: `DELETE /api/remove-account/{id}`
 - **Headers**: `Authorization: Bearer <token>`
 - **Response**: `200 OK`
 

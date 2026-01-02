@@ -16,6 +16,11 @@ class AuthController {
             return;
         }
 
+        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $this->response(false, 400, "Invalid email format.");
+            return;
+        }
+
         // Check if email already exists
         if ($this->user->fieldExists('email', $data['email'])) {
             $this->response(false, 400, "Email already exists.");
@@ -31,12 +36,17 @@ class AuthController {
         $this->user->username = $data['username'];
         $this->user->email = $data['email'];
         $this->user->password = password_hash($data['password'], PASSWORD_BCRYPT);
+        
+        // Optional fields
+        if (isset($data['full_name'])) $this->user->full_name = $data['full_name'];
+        if (isset($data['phone'])) $this->user->phone = $data['phone'];
 
         if ($this->user->create()) {
             $payload = [
                 "id" => $this->user->id,
                 "username" => $this->user->username,
-                "email" => $this->user->email
+                "email" => $this->user->email,
+                "full_name" => $this->user->full_name
             ];
             $this->response(true, 201, "User registered successfully.", $payload);
         } else {

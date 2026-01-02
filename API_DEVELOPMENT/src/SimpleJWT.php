@@ -37,7 +37,14 @@ class SimpleJWT {
 
         if ($base64UrlSignature === $signature_provided) {
             $payload = self::base64UrlDecode($base64UrlPayload);
-            return json_decode($payload, true);
+            $decoded = json_decode($payload, true);
+            
+            // Check token expiration
+            if (isset($decoded['exp']) && $decoded['exp'] < time()) {
+                return null; // Token expired
+            }
+            
+            return $decoded;
         }
         
         return null;
