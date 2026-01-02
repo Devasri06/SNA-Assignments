@@ -37,10 +37,13 @@ class UserController {
         $this->checkAuth();
         $this->user->id = $id;
         if ($this->user->readOne()) {
-            $user_arr = [
                 "id" => $this->user->id,
                 "username" => $this->user->username,
                 "email" => $this->user->email,
+                "full_name" => $this->user->full_name,
+                "phone" => $this->user->phone,
+                "role" => $this->user->role,
+                "is_active" => $this->user->is_active,
                 "created_at" => $this->user->created_at,
                 "updated_at" => $this->user->updated_at
             ];
@@ -58,6 +61,11 @@ class UserController {
             return;
         }
 
+        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $this->response(false, 400, "Invalid email format.");
+            return;
+        }
+
         if ($this->user->fieldExists('email', $data['email']) || $this->user->fieldExists('username', $data['username'])) {
             $this->response(false, 400, "User already exists (username or email).");
             return;
@@ -66,12 +74,17 @@ class UserController {
         $this->user->username = $data['username'];
         $this->user->email = $data['email'];
         $this->user->password = password_hash($data['password'], PASSWORD_BCRYPT);
+        
+        if (isset($data['full_name'])) $this->user->full_name = $data['full_name'];
+        if (isset($data['phone'])) $this->user->phone = $data['phone'];
 
         if ($this->user->create()) {
             $this->response(true, 201, "User created successfully.", [
                 "id" => $this->user->id,
                 "username" => $this->user->username,
-                "email" => $this->user->email
+                "email" => $this->user->email,
+                "full_name" => $this->user->full_name,
+                "phone" => $this->user->phone
             ]);
         } else {
             $this->response(false, 500, "Unable to create user.");
@@ -104,6 +117,8 @@ class UserController {
         if (isset($data['username'])) $this->user->username = $data['username'];
         if (isset($data['email'])) $this->user->email = $data['email'];
         if (isset($data['password'])) $this->user->password = password_hash($data['password'], PASSWORD_BCRYPT);
+        if (isset($data['full_name'])) $this->user->full_name = $data['full_name'];
+        if (isset($data['phone'])) $this->user->phone = $data['phone'];
 
         if ($this->user->update()) {
              // Retrieve updated data to return
@@ -112,6 +127,10 @@ class UserController {
                  "id" => $this->user->id,
                  "username" => $this->user->username,
                  "email" => $this->user->email,
+                 "full_name" => $this->user->full_name,
+                 "phone" => $this->user->phone,
+                 "role" => $this->user->role,
+                 "is_active" => $this->user->is_active,
                  "updated_at" => $this->user->updated_at
              ];
              $this->response(true, 200, "User updated successfully.", $res_data);
